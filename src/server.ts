@@ -1,9 +1,10 @@
 import "dotenv/config";
 
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import { userRoutes } from "./routes/user.routes.js";
-
 
 const app = express();
 
@@ -11,57 +12,92 @@ const port =
   Number(process.env.PORT) || 3000;
 
 
-// Permite receber JSON
+// Caminho absoluto da pasta public
+const __filename =
+  fileURLToPath(import.meta.url);
+
+const __dirname =
+  path.dirname(__filename);
+
+const publicPath =
+  path.join(
+    __dirname,
+    "../public"
+  );
+
+
+// JSON
 app.use(
   express.json()
 );
 
 
-// Serve os arquivos do frontend
+// Arquivos estáticos
 app.use(
-  express.static("public")
+  express.static(publicPath)
 );
 
 
-// Rotas da API
+// API
 app.use(
   "/users",
   userRoutes
 );
 
 
-// Rota de teste
+// Status
 app.get(
   "/api/status",
   (_req, res) => {
 
     res.json({
-      message: "API de usuários funcionando!",
-      database: "PostgreSQL",
-      endpoints: "/users"
+      message:
+        "API de usuários funcionando!",
+      database:
+        "PostgreSQL",
+      endpoints:
+        "/users"
     });
 
   }
 );
 
 
-// Rota não encontrada
+// Frontend
+app.get(
+  "/",
+  (_req, res) => {
+
+    res.sendFile(
+      path.join(
+        publicPath,
+        "index.html"
+      )
+    );
+
+  }
+);
+
+
+// 404
 app.use(
   (_req, res) => {
 
     res
       .status(404)
       .json({
-        error: "Rota não encontrada."
+        error:
+          "Rota não encontrada."
       });
 
   }
 );
 
 
-// Executa listen apenas localmente
+// Local
 if (
-  process.env.NODE_ENV !== "production"
+  process.env.NODE_ENV
+  !== "production"
 ) {
 
   app.listen(
@@ -72,19 +108,10 @@ if (
         `Servidor rodando em http://localhost:${port}`
       );
 
-      console.log(
-        `Frontend: http://localhost:${port}`
-      );
-
-      console.log(
-        `API: http://localhost:${port}/users`
-      );
-
     }
   );
 
 }
 
 
-// Exporta para a Vercel
 export default app;
