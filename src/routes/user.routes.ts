@@ -5,7 +5,7 @@ import {
   getUserById,
   listUsers,
   updateUser
-} from "../controllers/user.controller";
+} from "../controllers/user.controller.js";
 
 const userRoutes = Router();
 
