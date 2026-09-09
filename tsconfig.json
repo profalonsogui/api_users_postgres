@@ -5,8 +5,11 @@
     "target": "ES2023",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "ignoreDeprecations": "6.0"
+    "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "prisma.config.ts", "generated/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "prisma.config.ts",
+    "generated/**/*.ts"
+  ]
 }
